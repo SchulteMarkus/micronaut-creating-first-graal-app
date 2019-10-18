@@ -1,3 +1,3 @@
-if(System.getenv("TRAVIS") == null) {
-    include 'complete'
+if (System.getenv("TRAVIS") == null) {
+    include 'complete', 'complete-sqs'
 }
