@@ -10,7 +10,9 @@ while true; do
   REQUEST_ID=$(grep -Fi Lambda-Runtime-Aws-Request-Id "$HEADERS" | tr -d '[:space:]' | cut -d: -f2)
 
   # Execute the handler function from the script
+  set -x
   RESPONSE=$(./"$_HANDLER" -x -d "$EVENT_DATA")
+  set +x
 
   # Send the response
   curl -X POST "http://${AWS_LAMBDA_RUNTIME_API}/2018-06-01/runtime/invocation/$REQUEST_ID/response" -d "$RESPONSE"
