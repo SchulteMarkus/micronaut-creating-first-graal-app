@@ -1,12 +1,10 @@
 package example.micronaut;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.amazonaws.services.lambda.runtime.events.SQSEvent;
+import com.amazonaws.services.lambda.runtime.events.SQSEvent.SQSMessage;
 import io.micronaut.test.annotation.MicronautTest;
-import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
 import javax.inject.Inject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,17 +12,14 @@ import org.junit.jupiter.api.Test;
 @MicronautTest
 class ConferenceServiceTest {
 
-  private static final TypeReference<HashMap<String, Object>> MAP_TYPE_REFERENCE =
-      new TypeReference<>() {};
-
-  @Inject private ObjectMapper objectMapper;
-
   @Inject private ConferenceService conferenceService;
 
   @Test
-  void getConference() throws IOException {
-    final String sqsEventJson = "{\"Records\": [{\"name\":\"Greach\"}]}";
-    final Map<String, Object> sqsEvent = objectMapper.readValue(sqsEventJson, MAP_TYPE_REFERENCE);
+  void getConference() {
+    final SQSMessage sqsMessage = new SQSMessage();
+    sqsMessage.setBody("{\"conferenceName\":\"Greach\"}");
+    final SQSEvent sqsEvent = new SQSEvent();
+    sqsEvent.setRecords(Collections.singletonList(sqsMessage));
 
     final Collection<Conference> conferences = conferenceService.getConferences(sqsEvent);
 

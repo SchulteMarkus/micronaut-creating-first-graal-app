@@ -44,6 +44,9 @@ dependencies {
     testImplementation platform("io.micronaut:micronaut-bom:$micronautVersion")
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "io.micronaut.test:micronaut-test-junit5"
+    testImplementation 'io.micronaut:micronaut-function-client'
+    testImplementation 'io.micronaut:micronaut-http-server-netty'
+    testImplementation 'io.micronaut:micronaut-function-web'
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 }
 
@@ -55,7 +58,7 @@ run.classpath += configurations.developmentOnly
 test.classpath += configurations.developmentOnly
 run.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1')
 
-mainClassName = "example.micronaut.Function"
+mainClassName = "example.micronaut.ConsumeSqsFunction"
 // use JUnit 5 platform
 test {
     useJUnitPlatform()

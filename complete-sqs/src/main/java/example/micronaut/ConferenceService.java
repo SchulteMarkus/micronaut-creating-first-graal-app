@@ -1,20 +1,25 @@
 package example.micronaut;
 
+import com.amazonaws.services.lambda.runtime.events.SQSEvent;
+import com.amazonaws.services.lambda.runtime.events.SQSEvent.SQSMessage;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.core.util.StringUtils;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Singleton // <1>
 public class ConferenceService {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ConferenceService.class);
 
   private static final List<Conference> CONFERENCES =
@@ -27,18 +32,34 @@ public class ConferenceService {
           new Conference("CommitConf"),
           new Conference("Codemotion Madrid"));
 
-  public Collection<Conference> getConferences(final Map<String, Object> sqsEvent) { // <2>
-    final List<HashMap<String, String>> records =
-        (ArrayList<HashMap<String, String>>) sqsEvent.get("Records");
-    LOGGER.info("{} records from SQS event given", records.size());
+  private final ObjectMapper objectMapper;
 
-    if (records.size() == 0) {
+  @Inject
+  public ConferenceService(final ObjectMapper objectMapper) {
+    this.objectMapper = objectMapper;
+  }
+
+  public Collection<Conference> getConferences(final SQSEvent sqsEvent) { // <2>
+    final List<SQSMessage> sqsMessages = sqsEvent.getRecords();
+    LOGGER.info("{} records from SQS event given", sqsMessages.size());
+
+    if (sqsMessages.isEmpty()) {
       return Collections.emptyList();
     }
 
     final List<Conference> allMatchingConferences = new ArrayList<>();
-    for (final HashMap<String, String> record : records) {
-      final String conferenceName = record.get("search");
+    for (final SQSMessage sqsMessage : sqsMessages) {
+      final String messageBody = sqsMessage.getBody();
+      final JsonNode nameContainer;
+      try {
+        LOGGER.debug("Reading {}", messageBody);
+        nameContainer = objectMapper.readTree(messageBody);
+      } catch (final IOException e) {
+        LOGGER.warn("Cannot read {}", messageBody);
+        continue;
+      }
+
+      final String conferenceName = nameContainer.get("conferenceName").asText();
       if (StringUtils.isNotEmpty(conferenceName)) {
         final List<Conference> matchingConferences =
             CONFERENCES.stream()
