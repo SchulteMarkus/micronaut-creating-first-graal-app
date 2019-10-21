@@ -1,8 +1,8 @@
 # Creating your first Micronaut Graal function consuming a SQS event #
 
-**Setup**
+## One-time setup
 
-In AWS, create a SQS whichs triggers an AWS Lambda as described on
+In AWS, create a SQS which triggers an AWS Lambda with name **complete-sqs** as described on
 https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html
 
 ## Usage
@@ -19,7 +19,7 @@ https://docs.aws.amazon.com/lambda/latest/dg/java-programming-model.html
 
     $ make invoke-lambda-as-jar-locally
     $ # or
-    $ make lambda-as-jar-deploy-to-aws 
+    $ make deploy-lambda-as-jar-to-aws 
     $ make invoke-lambda-on-aws       
 
 ## Binary / AWS Lambda custom runtime
@@ -33,5 +33,5 @@ For local testing, you can use _build/micronaut-graal-sqs-function_
 
     $ make invoke-lambda-as-graal-locally
     $ # or
-    $ make lambda-as-graal-deploy-to-aws 
+    $ make deploy-lambda-as-graal-to-aws 
     $ make invoke-lambda-on-aws       
