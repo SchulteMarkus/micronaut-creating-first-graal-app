@@ -2,6 +2,7 @@ package example.micronaut;
 
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import io.micronaut.core.annotation.TypeHint;
+import io.micronaut.core.annotation.TypeHint.AccessType;
 import io.micronaut.function.FunctionBean;
 import io.micronaut.function.executor.FunctionInitializer;
 import java.io.IOException;
@@ -13,7 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @FunctionBean(ConsumeSqsFunction.FUNCTION_BEAN_NAME)
-@TypeHint({SQSEvent.class, SQSEvent.SQSMessage.class, SQSEvent.MessageAttribute.class})
+@TypeHint(
+    value = {SQSEvent.class, SQSEvent.SQSMessage.class, SQSEvent.MessageAttribute.class},
+    accessType = AccessType.ALL_PUBLIC)
 public class ConsumeSqsFunction extends FunctionInitializer
     implements Function<SQSEvent, Collection<Conference>> {
 

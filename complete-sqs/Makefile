@@ -13,10 +13,10 @@ lambda-as-graal-deploy-to-aws:
 	aws lambda update-function-code --function-name complete-sqs --zip-file fileb://build/awsfunction.zip
 
 invoke-lambda-as-jar-locally:
-	java -XX:TieredStopAtLevel=1 -noverify -jar build/libs/complete-sqs-0.1-all.jar -x -d "{\"Records\": [{\"body\": \"{\\\"conferenceName\\\":\\\"Greach\\\"}\"}]}"
+	java -XX:TieredStopAtLevel=1 -noverify -jar build/libs/complete-sqs-0.1-all.jar -x -d "{\"Records\": [{\"body\": \"{\\\"conferenceName\\\":\\\"Greach\\\"}\", \"awsRegion\": \"somewhere\"}]}"
 
 invoke-lambda-as-graal-locally:
-	build/micronaut-graal-sqs-function -x -d "{\"Records\": [{\"body\": \"{\\\"conferenceName\\\":\\\"Greach\\\"}\"}]}"
+	build/micronaut-graal-sqs-function -x -d "{\"Records\": [{\"body\": \"{\\\"conferenceName\\\":\\\"Greach\\\"}\", \"awsRegion\": \"somewhere\"}]}"
 
 invoke-lambda-on-aws:
 	aws lambda invoke --function-name complete-sqs --payload '{\"Records\": [{\"body\": \"{\\\"conferenceName\\\":\\\"Greach\\\"}\"}]}' build/response.txt
