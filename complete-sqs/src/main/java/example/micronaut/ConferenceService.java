@@ -59,6 +59,11 @@ public class ConferenceService {
         continue;
       }
 
+      if (!nameContainer.has("conferenceName")) {
+        LOGGER.warn("Missing conferenceName in {}", nameContainer);
+        continue;
+      }
+
       final String conferenceName = nameContainer.get("conferenceName").asText();
       if (StringUtils.isNotEmpty(conferenceName)) {
         final List<Conference> matchingConferences =
