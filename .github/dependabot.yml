@@ -1,0 +1,18 @@
+version: 2
+updates:
+- package-ecosystem: gradle
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: org.aim42.htmlSanityCheck
+    versions:
+    - 1.1.4
+  - dependency-name: com.amazonaws:aws-lambda-java-events
+    versions:
+    - 3.7.0
+  - dependency-name: com.github.johnrengelman.shadow
+    versions:
+    - 6.1.0
